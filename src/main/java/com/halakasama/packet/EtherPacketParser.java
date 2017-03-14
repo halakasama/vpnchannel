@@ -142,4 +142,11 @@ public class EtherPacketParser {
             return false;
         }
     }
+
+    public DataPacket getDataPacket(){
+        if (!isIpV4Packet()){
+            return null;
+        }
+        return new DataPacket(ipV4Header.getSrcAddr().getHostAddress(),ipV4Header.getDstAddr().getHostAddress(),Arrays.copyOf(buffer,length));
+    }
 }

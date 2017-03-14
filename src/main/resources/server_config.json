@@ -1,0 +1,21 @@
+{
+  "serverAddress":"192.168.48.6",
+  "serverPort":1234,
+  "clientPort":1235,
+  "clients": [
+    {
+      "physicalAddress": "192.168.48.6",
+      "virtualAddress": "10.9.8.2"
+    },
+    {
+      "physicalAddress": "192.168.48.26",
+      "virtualAddress": "10.9.8.3"
+    },
+    {
+      "physicalAddress": "192.168.32.4",
+      "virtualAddress": "10.9.8.4"
+    }
+  ],
+  "virtualNetwork":"10.9.8.0",
+  "virtualMask":"255.255.255.0"
+}
