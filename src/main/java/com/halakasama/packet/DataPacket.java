@@ -12,6 +12,7 @@ public class DataPacket {
     public String dstAddress;
     public byte[] data;
 
+    public DataPacket(){};
     public DataPacket(String srcAddress, String dstAddress, byte[] data) {
         this.srcAddress = srcAddress;
         this.dstAddress = dstAddress;
