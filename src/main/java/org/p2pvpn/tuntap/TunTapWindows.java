@@ -19,10 +19,8 @@
 
 package org.p2pvpn.tuntap;
 
-import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.p2pvpn.tools.AdapterManager;
 
 /**
  * The TunTap class for Windows
@@ -104,11 +102,4 @@ public class TunTapWindows extends TunTap {
     	}        
     }
 
-    public Boolean checkAndInstallAdapter() {
-        AdapterManager adapter = new AdapterManager();
-        if(adapter.install())
-            return true;
-
-        return false;
-    }
 }
