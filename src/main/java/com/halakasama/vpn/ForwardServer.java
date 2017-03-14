@@ -49,6 +49,10 @@ public class ForwardServer {
                 continue;
             }
             String dstVirtualAddress = dataPacket.dstAddress;
+            if (!SERVER_CONFIG.routeTable.containsKey(dstVirtualAddress)){
+                LOGGER.info("VirtualAddress {} not registered yet!",dstVirtualAddress);
+                continue;
+            }
             packet.setAddress(SERVER_CONFIG.routeTable.get(dstVirtualAddress).physicalAddress);
             packet.setPort(SERVER_CONFIG.routeTable.get(dstVirtualAddress).clientPort);
             server.send(packet);
