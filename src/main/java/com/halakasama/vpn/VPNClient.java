@@ -50,7 +50,7 @@ public class VPNClient {
         if (!etherPacketParser.isInIp4Subnet(CLIENT_CONFIG.virtualNetwork,CLIENT_CONFIG.virtualMask)){
             return;
         }
-        LOGGER.info("Subnet packet received. \n{}", etherPacketParser.getEtherPacket());
+        LOGGER.info("Subnet packet received from tuntap. \n{}", etherPacketParser.getEtherPacket());
 
         byte[] arpResponse = etherPacketParser.getArpResponse("");
         if (arpResponse!=null){
