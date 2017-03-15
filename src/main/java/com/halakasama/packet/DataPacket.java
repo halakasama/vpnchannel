@@ -2,6 +2,8 @@ package com.halakasama.packet;
 
 import org.msgpack.annotation.Message;
 
+import java.util.Arrays;
+
 /**
  * Created by pengfei.ren on 2017/3/14.
  */
@@ -17,5 +19,14 @@ public class DataPacket {
         this.srcAddress = srcAddress;
         this.dstAddress = dstAddress;
         this.data = data;
+    }
+
+    @Override
+    public String toString() {
+        return "DataPacket{" +
+                "srcAddress='" + srcAddress + '\'' +
+                ", dstAddress='" + dstAddress + '\'' +
+                ", data=" + Arrays.toString(data) +
+                '}';
     }
 }
