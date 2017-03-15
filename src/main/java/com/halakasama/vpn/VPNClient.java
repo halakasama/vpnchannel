@@ -50,6 +50,12 @@ public class VPNClient {
         if (!etherPacketParser.isInIp4Subnet(CLIENT_CONFIG.virtualNetwork,CLIENT_CONFIG.virtualMask)){
             return;
         }
+
+        if (etherPacketParser.isIpBroadcast(CLIENT_CONFIG.virtualBroadcast)){
+            LOGGER.error("IP broadcast packet received from tuntap, but not supported yet!");
+            return;
+        }
+
         LOGGER.info("Subnet packet received from tuntap. \n{}", etherPacketParser.getEtherPacket());
 
         byte[] arpResponse = etherPacketParser.getArpResponse("");

@@ -26,6 +26,7 @@ public class Configuration {
 
     public String virtualNetwork;
     public String virtualMask;
+    public String virtualBroadcast;
 
     public Configuration(String configPath) {
         Map object = null;
@@ -44,6 +45,7 @@ public class Configuration {
         clientPort = (Integer) object.get("clientPort");
         virtualNetwork = (String) object.get("virtualNetwork");
         virtualMask = (String) object.get("virtualMask");
+        virtualBroadcast = (String)object.get("virtualBroadcast");
     }
 
 

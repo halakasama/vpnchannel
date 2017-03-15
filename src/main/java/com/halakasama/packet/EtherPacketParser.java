@@ -1,6 +1,7 @@
 package com.halakasama.packet;
 
 import ch.qos.logback.core.encoder.ByteArrayUtil;
+import com.google.common.base.Strings;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.pcap4j.packet.*;
@@ -148,5 +149,9 @@ public class EtherPacketParser {
             return null;
         }
         return new DataPacket(ipV4Header.getSrcAddr().getHostAddress(),ipV4Header.getDstAddr().getHostAddress(),Arrays.copyOf(buffer,length));
+    }
+
+    public boolean isIpBroadcast(String broadcastAddress){
+        return StringUtils.equals(broadcastAddress,ipV4Header.getDstAddr().getHostAddress());
     }
 }

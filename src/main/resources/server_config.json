@@ -17,5 +17,6 @@
     }
   ],
   "virtualNetwork":"10.9.8.0",
-  "virtualMask":"255.255.255.0"
+  "virtualMask":"255.255.255.0",
+  "virtualBroadcast":"10.9.8.255"
 }
