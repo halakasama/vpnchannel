@@ -55,7 +55,9 @@ public class ForwardServer {
             }
             packet.setAddress(SERVER_CONFIG.routeTable.get(dstVirtualAddress).physicalAddress);
             packet.setPort(SERVER_CONFIG.routeTable.get(dstVirtualAddress).clientPort);
+            packet.setData(buf,0,packet.getLength());
             server.send(packet);
+//            server.send(new DatagramPacket(new byte[]{1,2,3},0,3,SERVER_CONFIG.routeTable.get(dstVirtualAddress).physicalAddress,SERVER_CONFIG.routeTable.get(dstVirtualAddress).clientPort));
         }
     }
 

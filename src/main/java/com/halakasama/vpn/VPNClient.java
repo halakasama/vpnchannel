@@ -74,8 +74,10 @@ public class VPNClient {
         byte[] buf = new byte[2048];
         DatagramPacket datagramPacket = new DatagramPacket(buf,buf.length);
         datagramSocket.receive(datagramPacket);
+        LOGGER.info("Packet received from link. {}",datagramPacket.getData());
         MessagePack msgPack = new MessagePack();
         DataPacket dataPacket = msgPack.read(datagramPacket.getData(),DataPacket.class);
+        LOGGER.info("Packet received from link. {}",datagramPacket);
         tunTap.write(dataPacket.data,dataPacket.data.length);
     }
 

@@ -34,8 +34,12 @@ public class Main {
 //        msgPack.register(DataPacket.class);
 //        byte[] buf = msgPack.write(new DataPacket("192.1","192.2",new byte[]{1,2,3}));
 
+//        String configPath = args[0];
         String mode = args[0];
         String configPath = Resources.getResource("server_config.json").getPath();
+//        String configPath = Resources.getResource(Main.class,"server_config.json").getPath();
+//        String configPath = Main.class.getResource("server_config.json").getPath();
+        System.out.println(configPath);
         if (mode.equals("server")){
             ForwardServer forwardServer = new ForwardServer(configPath);
             forwardServer.run();
