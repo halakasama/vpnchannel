@@ -4,15 +4,15 @@
   "clientPort":1235,
   "clients": [
     {
-      "physicalAddress": "192.168.48.6",
+      "physicalAddress": "192.168.48.79",
       "virtualAddress": "10.9.8.2"
     },
     {
-      "physicalAddress": "192.168.48.26",
+      "physicalAddress": "192.168.48.101",
       "virtualAddress": "10.9.8.3"
     },
     {
-      "physicalAddress": "192.168.32.4",
+      "physicalAddress": "192.168.48.22",
       "virtualAddress": "10.9.8.4"
     }
   ],
