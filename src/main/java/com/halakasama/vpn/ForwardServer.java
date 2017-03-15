@@ -35,8 +35,8 @@ public class ForwardServer {
         byte[] buf = new byte[2048];
         DatagramPacket packet = new DatagramPacket(buf, buf.length);
 
-        MessagePack msgPack = new MessagePack();
         while (null!=server){
+            MessagePack msgPack = new MessagePack();
             server.receive(packet);
             byte[] msg = packet.getData();
             LOGGER.info("Msg received. {}",msg);
@@ -55,7 +55,7 @@ public class ForwardServer {
             }
             packet.setAddress(SERVER_CONFIG.routeTable.get(dstVirtualAddress).physicalAddress);
             packet.setPort(SERVER_CONFIG.routeTable.get(dstVirtualAddress).clientPort);
-            packet.setData(buf,0,packet.getLength());
+            packet.setData(dataPacket.data,0,dataPacket.data.length);
             server.send(packet);
 //            server.send(new DatagramPacket(new byte[]{1,2,3},0,3,SERVER_CONFIG.routeTable.get(dstVirtualAddress).physicalAddress,SERVER_CONFIG.routeTable.get(dstVirtualAddress).clientPort));
         }

@@ -66,6 +66,7 @@ public class VPNClient {
 
         MessagePack msgPack = new MessagePack();
         DataPacket dataPacket = etherPacketParser.getDataPacket();
+        LOGGER.info("DataPacket ready to send. {}", dataPacket);
         byte[] data = msgPack.write(dataPacket);
         DatagramPacket datagramPacket = new DatagramPacket(data,data.length,CLIENT_CONFIG.serverAddress,CLIENT_CONFIG.serverPort);
         datagramSocket.send(datagramPacket);
