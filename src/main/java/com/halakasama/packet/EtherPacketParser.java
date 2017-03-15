@@ -152,6 +152,9 @@ public class EtherPacketParser {
     }
 
     public boolean isIpBroadcast(String broadcastAddress){
-        return StringUtils.equals(broadcastAddress,ipV4Header.getDstAddr().getHostAddress());
+        if(isIpV4Packet()) {
+            return StringUtils.equals(broadcastAddress, ipV4Header.getDstAddr().getHostAddress());
+        }
+        return false;
     }
 }
