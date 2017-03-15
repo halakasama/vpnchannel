@@ -69,7 +69,7 @@ public class VPNClient {
         LOGGER.info("DataPacket ready to send. {}", dataPacket);
         byte[] data = msgPack.write(dataPacket);
         dataPacket = msgPack.read(data,DataPacket.class);
-        LOGGER.info("DataPacket parsed. {}",dataPacket);
+        LOGGER.info("byte[] data length {},data {}",data.length,data);
         DatagramPacket datagramPacket = new DatagramPacket(data,data.length,CLIENT_CONFIG.serverAddress,CLIENT_CONFIG.serverPort);
         datagramSocket.send(datagramPacket);
     }
