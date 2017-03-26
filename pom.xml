@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.halakasama</groupId>
-    <artifactId>p2pvpn</artifactId>
+    <artifactId>vpnchannel</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <dependencies>

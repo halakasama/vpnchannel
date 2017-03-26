@@ -5,6 +5,7 @@ import org.pcap4j.packet.IpV4Packet;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.util.LinkedHashMap;
 
 /**
  * Created by pengfei.ren on 2017/3/14.
@@ -29,6 +30,8 @@ public class Test {
 //        byte[] bytes = msgpack.write(src);
 //        // Deserialize
 //        MyMessage dst = msgpack.read(bytes, MyMessage.class);
+        LinkedHashMap<String,String> a = new LinkedHashMap<>();
+        a.put("abc",null);
         DatagramSocket datagramSocket = new DatagramSocket(1110, InetAddress.getByName("10.9.8.3"));
         byte[] buf = new byte[2048];
         DatagramPacket packet = new DatagramPacket(buf,0,buf.length);
