@@ -1,5 +1,6 @@
 package com.halakasama.control;
 
+import com.halakasama.control.protocal.ProtocolHandler;
 import com.halakasama.control.protocal.ProtocolManager;
 
 import java.nio.channels.SocketChannel;
@@ -10,5 +11,6 @@ import java.nio.channels.SocketChannel;
 public class ConnectContext {
     SocketChannel socketChannel;
     ProtocolManager protocolManager;
+    ProtocolHandler protocolHandler;
     CryptoContext cryptoContext;
 }

@@ -20,16 +20,6 @@ public class Test {
     }
 
     public static void main(String[] args) throws Exception {
-//        MyMessage src = new MyMessage();
-//        src.name = "msgpack";
-//        src.version = 0.6;
-//        src.data = new byte[]{1,2,3};
-//
-//        MessagePack msgpack = new MessagePack();
-//        // Serialize
-//        byte[] bytes = msgpack.write(src);
-//        // Deserialize
-//        MyMessage dst = msgpack.read(bytes, MyMessage.class);
         LinkedHashMap<String,String> a = new LinkedHashMap<>();
         a.put("abc",null);
         DatagramSocket datagramSocket = new DatagramSocket(1110, InetAddress.getByName("10.9.8.3"));

@@ -1,13 +1,18 @@
 package com.halakasama.control.protocal;
 
+import com.halakasama.control.ConnectContext;
+
 /**
  * Created by pengfei.ren on 2017/3/26.
  */
-public class ProtoStateAdapter implements ProtoState {
+public abstract class ProtoStateAdapter implements ProtoState {
     protected ProtocolManager protocolManager;
+    protected ConnectContext connectContext;
+
+    public ProtoStateAdapter(ConnectContext connectContext) {
+        this.connectContext = connectContext;
+    }
 
     @Override
-    public void handle() {
-
-    }
+    public abstract void proceed();
 }
