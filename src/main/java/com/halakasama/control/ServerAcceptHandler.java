@@ -9,7 +9,6 @@ import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Created by admin on 2017/3/27.
@@ -31,7 +30,7 @@ public class ServerAcceptHandler implements ControlChannelHandler {
         try {
             socketChannel = serverSocketChannel.accept();
             socketChannel.configureBlocking(false);
-            socketChannel.register(selector, SelectionKey.OP_READ, new ControlChannelReadAdapter());
+            socketChannel.register(selector, SelectionKey.OP_READ, new ControlChannelMessageHandler());
             //todo 服务器发起对客户端的认证
 //            clientContext.put(socketChannel.socket().getInetAddress().getHostAddress(),new ConnectContext());
         }catch (IOException e){

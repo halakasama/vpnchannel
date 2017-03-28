@@ -1,7 +1,7 @@
 package com.halakasama.control.protocal.authentication;
 
 import com.halakasama.control.ConnectContext;
-import com.halakasama.control.protocal.ProtoStateAdapter;
+import com.halakasama.control.protocal.Message;
 
 /**
  * Created by pengfei.ren on 2017/3/26.
@@ -13,7 +13,7 @@ public class AuthResultRecv extends ProtoStateAdapter {
     }
 
     @Override
-    public void proceed() {
+    public void proceed(Message message) {
 
     }
 }

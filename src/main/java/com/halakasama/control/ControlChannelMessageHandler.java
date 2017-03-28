@@ -1,5 +1,6 @@
 package com.halakasama.control;
 
+import com.halakasama.control.protocal.Message;
 import com.halakasama.control.protocal.ProtocolHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,24 +13,27 @@ import java.nio.channels.SocketChannel;
 /**
  * Created by admin on 2017/3/27.
  */
-public class ControlChannelReadAdapter implements ControlChannelHandler{
-    private static final Logger LOGGER = LoggerFactory.getLogger(ControlChannelReadAdapter.class);
+public class ControlChannelMessageHandler implements ControlChannelHandler{
+    private static final Logger LOGGER = LoggerFactory.getLogger(ControlChannelMessageHandler.class);
     private static final int BUF_SIZE = 1024;
-    private static final int FRAME_MAX_SIZE = 1024;
-    ByteBuffer buffer;
-    short frameLen;
-    byte[] frameContent;
+    private ByteBuffer buffer;
 
     ConnectContext connectContext;
-    ProtocolHandler protocolHandler;
+    ProtocolHandler protocolHandlerChain;
 
-    public ControlChannelReadAdapter() {
+    public ControlChannelMessageHandler() {
         buffer = ByteBuffer.allocate(BUF_SIZE);
         buffer.clear();
-        frameLen = 0;
-        frameContent = new byte[FRAME_MAX_SIZE];
     }
 
+    public void initProtocolHandlerChain(){
+
+    }
+
+    /**
+     * 处理粘包，读取一个完整消息
+     * @param selectionKey
+     */
     @Override
     public void handleTcpEvent(SelectionKey selectionKey) {
         SocketChannel socketChannel = (SocketChannel)selectionKey.channel();
@@ -37,16 +41,13 @@ public class ControlChannelReadAdapter implements ControlChannelHandler{
             socketChannel.read(buffer);
         } catch (IOException e) {
             LOGGER.error("SocketChannel {}:{} read error! {}",socketChannel.socket().getInetAddress().getHostAddress(),socketChannel.socket().getPort(),e);
+            return;
         }
 
         buffer.flip();
-        if (frameLen == 0 && buffer.remaining() > 2){
-            frameLen = buffer.getShort();
-            buffer.rewind();
-        }
-        if (frameLen != 0 && buffer.remaining() >= frameLen){
-            buffer.get(frameContent,0,frameLen);
-            frameLen = 0;
+        if (Message.hasCompleteMessage(buffer)){
+            Message message = Message.decode(buffer);
+            protocolHandlerChain.handle(message);
         }
         buffer.compact();
     }

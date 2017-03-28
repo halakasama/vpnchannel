@@ -12,8 +12,8 @@ public class ByteBufferTest {
         byteBuffer.put(new byte[]{0,1,2,3,4,5,6,7,8,9});
         byteBuffer.flip();
         byteBuffer.getInt();
-        byte[] array = new byte[7];
-        byteBuffer.get(array);
+        byte[] array = new byte[10];
+        byteBuffer.get(array,0,byteBuffer.remaining());
         System.out.println(Lists.newArrayList(array));
         System.out.println(byteBuffer.remaining());
     }
