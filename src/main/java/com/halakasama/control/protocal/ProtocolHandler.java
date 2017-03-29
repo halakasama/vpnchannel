@@ -1,14 +1,14 @@
 package com.halakasama.control.protocal;
 
 import com.halakasama.control.ConnectContext;
-import com.halakasama.control.ServerContext;
+import com.halakasama.control.LocalContextHelper;
 
 /**
  * Created by admin on 2017/3/27.
  */
 public abstract class ProtocolHandler {
+//    protected ProtoState currentState;
     protected ProtocolHandler successor;
-    protected ProtoState currentState;
     protected ConnectContext connectContext;
 
     public ProtocolHandler(ConnectContext connectContext) {
@@ -27,9 +27,9 @@ public abstract class ProtocolHandler {
         this.successor = successor;
     }
 
-    public void setCurrentState(ProtoState currentState) {
-        this.currentState = currentState;
-    }
+//    public void setCurrentState(ProtoState currentState) {
+//        this.currentState = currentState;
+//    }
 
     public void setConnectContext(ConnectContext connectContext) {
         this.connectContext = connectContext;
@@ -39,9 +39,9 @@ public abstract class ProtocolHandler {
         return successor;
     }
 
-    public ProtoState getCurrentState() {
-        return currentState;
-    }
+//    public ProtoState getCurrentState() {
+//        return currentState;
+//    }
 
     public ConnectContext getConnectContext() {
         return connectContext;

@@ -1,5 +1,8 @@
-package com.halakasama.control;
+package com.halakasama.control.server;
 
+import com.halakasama.control.ConnectContext;
+import com.halakasama.control.ControlChannelHandler;
+import com.halakasama.control.ControlChannelMessageHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

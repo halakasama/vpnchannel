@@ -1,7 +1,6 @@
 package com.halakasama.control.protocal.negotiation;
 
 import com.halakasama.control.ConnectContext;
-import com.halakasama.control.ServerContext;
 import com.halakasama.control.protocal.Message;
 import com.halakasama.control.protocal.ProtocolHandler;
 
