@@ -7,7 +7,6 @@ import com.halakasama.control.LocalContextHelper;
  * Created by admin on 2017/3/27.
  */
 public abstract class ProtocolHandler {
-//    protected ProtoState currentState;
     protected ProtocolHandler successor;
     protected ConnectContext connectContext;
 
@@ -27,10 +26,6 @@ public abstract class ProtocolHandler {
         this.successor = successor;
     }
 
-//    public void setCurrentState(ProtoState currentState) {
-//        this.currentState = currentState;
-//    }
-
     public void setConnectContext(ConnectContext connectContext) {
         this.connectContext = connectContext;
     }
@@ -38,10 +33,6 @@ public abstract class ProtocolHandler {
     public ProtocolHandler getSuccessor() {
         return successor;
     }
-
-//    public ProtoState getCurrentState() {
-//        return currentState;
-//    }
 
     public ConnectContext getConnectContext() {
         return connectContext;

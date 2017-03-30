@@ -40,6 +40,11 @@ public class ServerContextHelper implements LocalContextHelper{
     }
 
     @Override
+    public byte[] getSharedKey(int keyPtr, int size) {
+        return new byte[0];
+    }
+
+    @Override
     public byte[] getChallengeResponse(ConnectContext connectContext, Message message) {
         return new byte[0];
     }

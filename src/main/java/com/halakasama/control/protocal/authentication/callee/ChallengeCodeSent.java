@@ -8,6 +8,7 @@ import com.halakasama.control.protocal.authentication.AuthMessageType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.nio.channels.SocketChannel;
 
 /**
@@ -46,17 +47,26 @@ public class ChallengeCodeSent implements AuthCalleeState{
         String uid = connectContext.getUid();
 //        int keyPtr =
 //        byte[] sharedKey = localContextHelper.getSharedKey(uid,);
+//        byte[] codeHmac =
         byte authResult = localContextHelper.getAuthResult(connectContext,message);
 
+
+
+        //发送认证结果
         Message.sendMessage(socketChannel, new Message(ProtocolType.AuthProtocol,AuthMessageType.AuthResult,new byte[]{authResult},1));
 
+        //根据认证结果更新状态机，如果认证失败，则关闭SocketChannel
         if (authResult == 0){
             authCallee.currentState = AuthCalleeSuccess.getInstance();
-            LOGGER.info("Authentication success! {}:{}",socketChannel.socket().getInetAddress().getHostAddress(),socketChannel.socket().getPort());
+            LOGGER.info("Authentication success! uid = {}, {}:{}",uid,socketChannel.socket().getInetAddress().getHostAddress(),socketChannel.socket().getPort());
         }else {
             authCallee.currentState = AuthCalleeFail.getInstance();
-            LOGGER.info("Authentication failed! {}:{}",socketChannel.socket().getInetAddress().getHostAddress(),socketChannel.socket().getPort());
-
+            LOGGER.info("Authentication failed! uid = {}, {}:{}",uid,socketChannel.socket().getInetAddress().getHostAddress(),socketChannel.socket().getPort());
+            try {
+                socketChannel.close();
+            } catch (IOException e) {
+                LOGGER.error("SocketChannel close failed.",e);
+            }
         }
 
     }

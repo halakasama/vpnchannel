@@ -24,7 +24,7 @@ public class AuthCallee extends ProtocolHandler {
 
     @Override
     public void handle(Message message) {
-        if ( !ProtocolType.isAuthProtocol(message.protocolType) && currentState instanceof AuthSuccess){
+        if ( !ProtocolType.isAuthProtocol(message.protocolType) && currentState instanceof AuthCalleeSuccess){
             successor.handle(message);
             return;
         }

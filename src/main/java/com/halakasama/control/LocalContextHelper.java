@@ -9,6 +9,7 @@ public interface LocalContextHelper {
     byte[] getLocalId();
     boolean checkUidValid(String uidBytes);
     byte[] getRandomBytes(int size);
+    byte[] getSharedKey(int keyPtr, int size);
     byte[] getChallengeResponse(ConnectContext connectContext, Message message);
     byte getAuthResult(ConnectContext connectContext, Message message);
     boolean handleAuthResult(ConnectContext connectContext, Message message);

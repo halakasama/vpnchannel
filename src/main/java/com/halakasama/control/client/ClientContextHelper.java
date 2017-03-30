@@ -14,6 +14,11 @@ public class ClientContextHelper implements LocalContextHelper {
     }
 
     @Override
+    public boolean checkUidValid(String uidBytes) {
+        return false;
+    }
+
+    @Override
     public byte[] getRandomBytes(int size) {
         return new byte[0];
     }
