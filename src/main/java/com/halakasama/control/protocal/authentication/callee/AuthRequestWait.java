@@ -38,7 +38,7 @@ public class AuthRequestWait implements AuthCalleeState{
     public void proceed(Message message, AuthCallee authCallee) {
         ConnectContext connectContext = authCallee.getConnectContext();
         SocketChannel socketChannel = connectContext.getSocketChannel();
-        LocalContextHelper localContextHelper = connectContext.getLocalContextHelper();
+        LocalContextHelper localContextHelper = authCallee.getLocalContextHelper();
 
         //检查消息类型是否合法
         if (!AuthMessageType.isAuthRequest(message.msgType)){
@@ -48,7 +48,7 @@ public class AuthRequestWait implements AuthCalleeState{
 
         //首先验证uid是否有效；无效则drop消息，并关闭SocketChannel
         String uid = StringUtils.newStringUtf8(Arrays.copyOf(message.content,message.contentLen));
-        connectContext.setUid(uid);
+        connectContext.setRemoteUid(uid);
         if (!localContextHelper.checkUidValid(uid)){
             LOGGER.error("Invalid uid {}", uid);
             try {

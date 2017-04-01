@@ -2,6 +2,7 @@ package com.halakasama.control;
 
 import com.halakasama.control.protocal.Message;
 import com.halakasama.control.protocal.ProtocolHandler;
+import com.halakasama.control.server.ServerContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,17 +19,15 @@ public class ControlChannelMessageHandler implements ControlChannelHandler{
     private static final int BUF_SIZE = 1024;
     private ByteBuffer buffer;
 
-    ConnectContext connectContext;
-    ProtocolHandler protocolHandlerChain;
+    private ConnectContext connectContext;
 
-    public ControlChannelMessageHandler() {
+    public ControlChannelMessageHandler(SocketChannel socketChannel, boolean serverMode, LocalContextHelper localContextHelper) {
         buffer = ByteBuffer.allocate(BUF_SIZE);
         buffer.clear();
+
+        this.connectContext = new ConnectContext.Builder(serverMode, socketChannel, localContextHelper).build();
     }
 
-    public void initProtocolHandlerChain(){
-
-    }
 
     /**
      * 处理粘包，读取一个完整消息
@@ -47,7 +46,7 @@ public class ControlChannelMessageHandler implements ControlChannelHandler{
         buffer.flip();
         if (Message.hasCompleteMessage(buffer)){
             Message message = Message.decode(buffer);
-            protocolHandlerChain.handle(message);
+            connectContext.getProtocolHandlerChain().handle(message);
         }
         buffer.compact();
     }

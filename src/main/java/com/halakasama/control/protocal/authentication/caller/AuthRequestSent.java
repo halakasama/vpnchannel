@@ -1,6 +1,8 @@
 package com.halakasama.control.protocal.authentication.caller;
 
+import com.halakasama.config.GlobalParam;
 import com.halakasama.control.ConnectContext;
+import com.halakasama.control.CryptoContext;
 import com.halakasama.control.LocalContextHelper;
 import com.halakasama.control.protocal.Message;
 import com.halakasama.control.protocal.ProtocolType;
@@ -9,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.nio.channels.SocketChannel;
+import java.util.Arrays;
 
 /**
  * Created by admin on 2017/3/29.
@@ -33,15 +36,22 @@ public class AuthRequestSent implements AuthCallerState {
     public void proceed(Message message, AuthCaller authCaller) {
         ConnectContext connectContext = authCaller.getConnectContext();
         SocketChannel socketChannel = connectContext.getSocketChannel();
-        LocalContextHelper localContextHelper = connectContext.getLocalContextHelper();
+        CryptoContext cryptoContext = connectContext.getCryptoContext();
 
+        //检查消息类型是否合法
         if (!AuthMessageType.isChallengeCode(message.msgType)){
             LOGGER.error("Wrong message received. {}",message);
             return;
         }
 
-        byte[] challengeResponse = localContextHelper.getChallengeResponse(connectContext,message);
-        Message.sendMessage(socketChannel, new Message(ProtocolType.AuthProtocol,AuthMessageType.ChallengeResponse,challengeResponse,challengeResponse.length));
+        //计算挑战码hmac，作为应答消息
+        byte[] challengeCode = Arrays.copyOf(message.content,message.contentLen);
+        byte[] challengeReply = cryptoContext.calcHmac(challengeCode, GlobalParam.AUTH_SALT_KEY_PTR);
+
+        //发送应答码消息
+        Message.sendMessage(socketChannel, new Message(ProtocolType.AuthProtocol,AuthMessageType.ChallengeResponse,challengeReply,challengeReply.length));
+
+        //更新状态机
         authCaller.currentState = ChallengeResponseSent.getInstance();
     }
 }

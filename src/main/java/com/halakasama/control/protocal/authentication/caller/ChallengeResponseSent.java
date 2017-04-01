@@ -29,21 +29,23 @@ public class ChallengeResponseSent implements AuthCallerState {
     @Override
     public void proceed(Message message, AuthCaller authCaller) {
         ConnectContext connectContext = authCaller.getConnectContext();
+        LocalContextHelper localContextHelper = authCaller.getLocalContextHelper();
 
+        //验证消息类型是否合法
         if (!AuthMessageType.isAuthResult(message.msgType)){
             LOGGER.error("Wrong message received. {}",message);
             return;
         }
 
-        LocalContextHelper localContextHelper = connectContext.getLocalContextHelper();
-        boolean authSuccess = localContextHelper.handleAuthResult(connectContext, message);
+        //检查认证是否成功，并更新状态机；如果认证成功，则注册该连接
+        boolean authSuccess = (message.contentLen > 0 && message.content[0] == 0);
         if (authSuccess){
+            localContextHelper.registerConnection(connectContext);
             authCaller.currentState = AuthCallerSuccess.getInstance();
             LOGGER.info("Authentication success!");
         }else {
             authCaller.currentState = AuthCallerFail.getInstance();
             LOGGER.info("Authentication failed!");
-
         }
     }
 }

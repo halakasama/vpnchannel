@@ -18,6 +18,7 @@ public class Md5Hmac implements HashFunc {
     public static Md5Hmac getInstance(){
         return INSTANCE;
     }
+
     @Override
     public byte[] getHmac(byte[] msg, byte[] salt) {
         return HmacUtils.hmacMd5(salt,msg);
@@ -26,6 +27,11 @@ public class Md5Hmac implements HashFunc {
     @Override
     public byte[] getEncryptHmac(byte[] msg, byte[] salt, byte[] key) {
         return getHmac(msg,salt);
+    }
+
+    @Override
+    public int saltSizeInByte() {
+        return 16;
     }
 
     public static void main(String[] args) {

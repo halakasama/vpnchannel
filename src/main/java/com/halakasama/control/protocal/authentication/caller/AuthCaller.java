@@ -1,6 +1,7 @@
 package com.halakasama.control.protocal.authentication.caller;
 
 import com.halakasama.control.ConnectContext;
+import com.halakasama.control.LocalContextHelper;
 import com.halakasama.control.protocal.Message;
 import com.halakasama.control.protocal.ProtocolHandler;
 import com.halakasama.control.protocal.ProtocolType;
@@ -12,8 +13,8 @@ import com.halakasama.control.protocal.authentication.callee.AuthCalleeSuccess;
 public class AuthCaller extends ProtocolHandler{
 
     AuthCallerState currentState;
-    public AuthCaller(ConnectContext connectContext) {
-        super(connectContext);
+    public AuthCaller(ConnectContext connectContext, LocalContextHelper localContextHelper) {
+        super(connectContext,localContextHelper);
     }
 
     @Override

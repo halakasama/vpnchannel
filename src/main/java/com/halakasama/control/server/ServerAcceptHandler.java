@@ -18,11 +18,10 @@ import java.util.Map;
  */
 public class ServerAcceptHandler implements ControlChannelHandler {
     private static final Logger LOGGER = LoggerFactory.getLogger(ServerAcceptHandler.class);
-    private Map<String, ConnectContext> clientContext;
-//    = new ConcurrentHashMap<>();
+    private ServerContext serverContext;
 
-    public ServerAcceptHandler(Map<String, ConnectContext> clientContext) {
-        this.clientContext = clientContext;
+    public ServerAcceptHandler(ServerContext serverContext) {
+        this.serverContext = serverContext;
     }
 
     @Override
@@ -33,9 +32,7 @@ public class ServerAcceptHandler implements ControlChannelHandler {
         try {
             socketChannel = serverSocketChannel.accept();
             socketChannel.configureBlocking(false);
-            socketChannel.register(selector, SelectionKey.OP_READ, new ControlChannelMessageHandler());
-            //todo 服务器发起对客户端的认证
-//            clientContext.put(socketChannel.socket().getInetAddress().getHostAddress(),new ConnectContext());
+            socketChannel.register(selector, SelectionKey.OP_READ, new ControlChannelMessageHandler(socketChannel,true, serverContext));
         }catch (IOException e){
             LOGGER.error("Client connection accept failed.",e);
             return;

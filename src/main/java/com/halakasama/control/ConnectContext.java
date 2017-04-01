@@ -1,6 +1,9 @@
 package com.halakasama.control;
 
+import com.halakasama.config.GlobalParam;
 import com.halakasama.control.protocal.ProtocolHandler;
+import com.halakasama.control.protocal.authentication.callee.AuthCallee;
+import com.halakasama.control.protocal.authentication.caller.AuthCaller;
 
 import java.nio.channels.SocketChannel;
 
@@ -10,17 +13,39 @@ import java.nio.channels.SocketChannel;
 public class ConnectContext {
     private SocketChannel socketChannel; //当前连接专有的控制通道
     private CryptoContext cryptoContext; //当前连接专有的密码学参数
-    private LocalContextHelper localContextHelper;
     private ProtocolHandler protocolHandlerChain; //当前连接专有的协议处理链
-    private String uid; //用户id
+    private String remoteUid; //用户id
 
-    public LocalContextHelper getLocalContextHelper() {
-        return localContextHelper;
+    private ConnectContext() {
     }
 
-    public void setLocalContextHelper(LocalContextHelper localContextHelper) {
-        this.localContextHelper = localContextHelper;
+
+    public static class Builder {
+        private ConnectContext connectContext;
+
+        public Builder(boolean serverMode, SocketChannel socketChannel, LocalContextHelper localContextHelper) {
+            connectContext = new ConnectContext();
+            connectContext.socketChannel = socketChannel;
+            connectContext.cryptoContext = new CryptoContext(localContextHelper);
+
+            //初始化protocolHandlerChain及remoteUid
+            if (serverMode){
+                connectContext.protocolHandlerChain = new AuthCallee(connectContext, localContextHelper);
+                connectContext.protocolHandlerChain.chainAddSuccessor(new AuthCaller(connectContext,localContextHelper));
+                connectContext.setRemoteUid(null);
+            }else {
+                connectContext.protocolHandlerChain = new AuthCaller(connectContext, localContextHelper);
+                connectContext.protocolHandlerChain.chainAddSuccessor(new AuthCallee(connectContext,localContextHelper));
+                connectContext.setRemoteUid(GlobalParam.SERVER_UID);
+            }
+        }
+
+        public ConnectContext build() {
+            return this.connectContext;
+        }
     }
+
+
 
     public SocketChannel getSocketChannel() {
         return socketChannel;
@@ -46,11 +71,12 @@ public class ConnectContext {
         this.cryptoContext = cryptoContext;
     }
 
-    public String getUid() {
-        return uid;
+    public String getRemoteUid() {
+        return remoteUid;
     }
 
-    public void setUid(String uid) {
-        this.uid = uid;
+    public void setRemoteUid(String remoteUid) {
+        this.remoteUid = remoteUid;
+        cryptoContext.setRemoteUid(remoteUid);
     }
 }

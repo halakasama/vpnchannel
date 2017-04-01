@@ -1,10 +1,13 @@
 package com.halakasama.control.protocal.authentication.callee;
 
+import com.halakasama.config.GlobalParam;
 import com.halakasama.control.ConnectContext;
+import com.halakasama.control.CryptoContext;
 import com.halakasama.control.LocalContextHelper;
 import com.halakasama.control.protocal.Message;
 import com.halakasama.control.protocal.ProtocolType;
 import com.halakasama.control.protocal.authentication.AuthMessageType;
+import org.bouncycastle.pqc.math.linearalgebra.ByteUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,7 +38,8 @@ public class ChallengeCodeSent implements AuthCalleeState{
     public void proceed(Message message, AuthCallee authCallee) {
         ConnectContext connectContext = authCallee.getConnectContext();
         SocketChannel socketChannel = connectContext.getSocketChannel();
-        LocalContextHelper localContextHelper = connectContext.getLocalContextHelper();
+        LocalContextHelper localContextHelper = authCallee.getLocalContextHelper();
+        CryptoContext cryptoContext = connectContext.getCryptoContext();
 
         //检查消息类型是否合法
         if (!AuthMessageType.isChallengeResponse(message.msgType)){
@@ -44,19 +48,17 @@ public class ChallengeCodeSent implements AuthCalleeState{
         }
 
         //检查应答消息是否有效
-        String uid = connectContext.getUid();
-//        int keyPtr =
-//        byte[] sharedKey = localContextHelper.getSharedKey(uid,);
-//        byte[] codeHmac =
-        byte authResult = localContextHelper.getAuthResult(connectContext,message);
-
-
+        String uid = connectContext.getRemoteUid();
+        byte[] challengeReply = message.content;
+        byte[] stdReply = cryptoContext.calcHmac(authCallee.challengeCode, GlobalParam.AUTH_SALT_KEY_PTR);
+        boolean authResult = ByteUtils.equals(challengeReply,stdReply);
 
         //发送认证结果
-        Message.sendMessage(socketChannel, new Message(ProtocolType.AuthProtocol,AuthMessageType.AuthResult,new byte[]{authResult},1));
+        Message.sendMessage(socketChannel, new Message(ProtocolType.AuthProtocol,AuthMessageType.AuthResult,new byte[]{(byte)(authResult ? 0 : 1)},1));
 
-        //根据认证结果更新状态机，如果认证失败，则关闭SocketChannel
-        if (authResult == 0){
+        //根据认证结果更新状态机，如果认证成功，则注册ConnectionContext;否则，关闭SocketChannel
+        if (authResult){
+            localContextHelper.registerConnection(connectContext);
             authCallee.currentState = AuthCalleeSuccess.getInstance();
             LOGGER.info("Authentication success! uid = {}, {}:{}",uid,socketChannel.socket().getInetAddress().getHostAddress(),socketChannel.socket().getPort());
         }else {

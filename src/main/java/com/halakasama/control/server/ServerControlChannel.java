@@ -18,10 +18,13 @@ import java.util.Set;
  */
 public class ServerControlChannel {
     private static final Logger LOGGER = LoggerFactory.getLogger(ServerControlChannel.class);
-    Selector selector;
-    ServerSocketChannel serverSocketChannel;
 
     public void service(ServerConfiguration serverConfig){
+        Selector selector;
+        ServerSocketChannel serverSocketChannel;
+        ServerContext serverContext = new ServerContext();
+
+        //打开ServerSocketChannel
         try {
             serverSocketChannel = ServerSocketChannel.open();
             serverSocketChannel.bind(new InetSocketAddress(serverConfig.serverAddress, serverConfig.serverPort))
@@ -33,8 +36,9 @@ public class ServerControlChannel {
             return;
         }
 
+        //开始事件驱动循环
         try {
-            serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT, new ServerAcceptHandler(null));
+            serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT, new ServerAcceptHandler(serverContext));
             while (true) {
                 selector.select();
                 Set<SelectionKey> selectedKeys = selector.selectedKeys();

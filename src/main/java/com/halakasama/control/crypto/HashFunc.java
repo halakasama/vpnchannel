@@ -6,4 +6,5 @@ package com.halakasama.control.crypto;
 public interface HashFunc {
     byte[] getHmac(byte[] msg,byte[] salt);
     byte[] getEncryptHmac(byte[] msg, byte[] salt, byte[] key);
+    int saltSizeInByte();
 }

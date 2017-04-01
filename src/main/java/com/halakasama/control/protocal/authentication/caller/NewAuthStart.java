@@ -5,6 +5,7 @@ import com.halakasama.control.LocalContextHelper;
 import com.halakasama.control.protocal.Message;
 import com.halakasama.control.protocal.ProtocolType;
 import com.halakasama.control.protocal.authentication.AuthMessageType;
+import org.apache.commons.codec.binary.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,17 +25,22 @@ public class NewAuthStart implements AuthCallerState{
     private NewAuthStart() {
     }
 
+    /**
+     * 发送uid，发起认证请求
+     * @param message
+     * @param authCaller
+     */
     @Override
     public void proceed(Message message, AuthCaller authCaller) {
         ConnectContext connectContext = authCaller.getConnectContext();
         SocketChannel socketChannel = connectContext.getSocketChannel();
-        LocalContextHelper localContextHelper = connectContext.getLocalContextHelper();
+        LocalContextHelper localContextHelper = authCaller.getLocalContextHelper();
 
-        message = new Message(ProtocolType.AuthProtocol, AuthMessageType.AuthRequest,localContextHelper.getLocalId(),localContextHelper.getLocalId().length);
-        if (!Message.sendMessage(socketChannel,message)){
-            LOGGER.error("Message send error!");
-            return;
-        }
+        //发送挑战应答认证请求
+        byte[] uidInByte = StringUtils.getBytesUtf8(localContextHelper.getLocalUid());
+        Message.sendMessage(socketChannel,new Message(ProtocolType.AuthProtocol, AuthMessageType.AuthRequest,uidInByte,uidInByte.length));
+
+        //更新状态机
         authCaller.currentState = AuthRequestSent.getInstance();
     }
 }

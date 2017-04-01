@@ -9,9 +9,19 @@ import com.halakasama.control.LocalContextHelper;
 public abstract class ProtocolHandler {
     protected ProtocolHandler successor;
     protected ConnectContext connectContext;
+    protected LocalContextHelper localContextHelper;
 
-    public ProtocolHandler(ConnectContext connectContext) {
+    public LocalContextHelper getLocalContextHelper() {
+        return localContextHelper;
+    }
+
+    public void setLocalContextHelper(LocalContextHelper localContextHelper) {
+        this.localContextHelper = localContextHelper;
+    }
+
+    public ProtocolHandler(ConnectContext connectContext, LocalContextHelper localContextHelper) {
         this.connectContext = connectContext;
+        this.localContextHelper = localContextHelper;
     }
 
     public abstract void setInitialState();

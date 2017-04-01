@@ -1,16 +1,22 @@
 package com.halakasama.control;
 
-import com.halakasama.control.protocal.Message;
-
 /**
  * Created by admin on 2017/3/29.
  */
 public interface LocalContextHelper {
-    byte[] getLocalId();
+    //用户操作
+    String getLocalUid();
     boolean checkUidValid(String uidBytes);
+
+    //随机数发生器
     byte[] getRandomBytes(int size);
-    byte[] getSharedKey(int keyPtr, int size);
-    byte[] getChallengeResponse(ConnectContext connectContext, Message message);
-    byte getAuthResult(ConnectContext connectContext, Message message);
-    boolean handleAuthResult(ConnectContext connectContext, Message message);
+
+    //操作秘钥
+    byte[] getCurrentKey(String uid, int keyPtr, int size);
+
+    //SocketChannel连接维护
+    void registerConnection(ConnectContext connectContext);
+    void unregisterConnection(ConnectContext connectContext);
+
+
 }

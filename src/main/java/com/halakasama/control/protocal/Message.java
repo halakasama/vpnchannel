@@ -76,7 +76,7 @@ public class Message {
     }
 
     /**
-     *
+     * 将读到的ByteBuffer
      * @param byteBuffer 一个读模式的ByteBuffer
      * @return
      */
