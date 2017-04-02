@@ -1,6 +1,6 @@
 package com.halakasama.control.protocal.authentication.caller;
 
-import com.halakasama.control.protocal.Message;
+import com.halakasama.control.Message;
 
 /**
  * Created by admin on 2017/3/29.

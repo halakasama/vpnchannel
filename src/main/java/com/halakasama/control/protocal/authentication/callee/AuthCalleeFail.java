@@ -1,6 +1,6 @@
 package com.halakasama.control.protocal.authentication.callee;
 
-import com.halakasama.control.protocal.Message;
+import com.halakasama.control.Message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

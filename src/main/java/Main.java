@@ -1,29 +1,6 @@
-import com.google.common.collect.Lists;
 import com.google.common.io.Resources;
-import com.halakasama.packet.DataPacket;
-import com.halakasama.vpn.ForwardServer;
+import com.halakasama.vpn.ServerDataChannel;
 import com.halakasama.vpn.VPNClient;
-import org.msgpack.MessagePack;
-import org.p2pvpn.tuntap.TunTap;
-import org.pcap4j.core.PcapHandle;
-import org.pcap4j.core.PcapNetworkInterface;
-import org.pcap4j.core.Pcaps;
-import org.pcap4j.packet.ArpPacket;
-import org.pcap4j.packet.EthernetPacket;
-import org.pcap4j.packet.IpV4Packet;
-import org.pcap4j.packet.Packet;
-import org.pcap4j.packet.factory.PacketFactories;
-import org.pcap4j.packet.namednumber.ArpHardwareType;
-import org.pcap4j.packet.namednumber.ArpOperation;
-import org.pcap4j.packet.namednumber.EtherType;
-import org.pcap4j.util.ByteArrays;
-import org.pcap4j.util.MacAddress;
-
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-import java.util.List;
 
 /**
  * Created by pengfei.ren on 2017/3/12.
@@ -41,8 +18,8 @@ public class Main {
 //        String configPath = Main.class.getResource("server_config.json").getPath();
         System.out.println(configPath);
         if (mode.equals("server")){
-            ForwardServer forwardServer = new ForwardServer(configPath);
-            forwardServer.run();
+            ServerDataChannel serverDataChannel = new ServerDataChannel(configPath);
+            serverDataChannel.run();
         }else {
             int clientIndex = Integer.parseInt(args[1]);
             VPNClient vpnClient = new VPNClient(configPath,clientIndex);

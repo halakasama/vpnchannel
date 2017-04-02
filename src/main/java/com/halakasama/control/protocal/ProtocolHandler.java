@@ -2,6 +2,7 @@ package com.halakasama.control.protocal;
 
 import com.halakasama.control.ConnectContext;
 import com.halakasama.control.LocalContextHelper;
+import com.halakasama.control.Message;
 
 /**
  * Created by admin on 2017/3/27.
@@ -26,6 +27,7 @@ public abstract class ProtocolHandler {
 
     public abstract void setInitialState();
     public abstract void handle(Message message);
+    public abstract void trigger();
 
     public ProtocolHandler chainAddSuccessor(ProtocolHandler successor) {
         this.successor = successor;

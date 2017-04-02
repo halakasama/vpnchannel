@@ -1,4 +1,4 @@
-package com.halakasama.control.protocal;
+package com.halakasama.control;
 
 import com.halakasama.config.GlobalParam;
 import org.slf4j.Logger;
@@ -48,14 +48,26 @@ public class Message {
 
     public static boolean sendMessage(SocketChannel socketChannel, Message message){
         ByteBuffer byteBuffer = Message.encode(message);//一个读模式的ByteBuffer
+        if (message.content[0] == 48 ){
+            System.out.println();
+            LOGGER.error("{}",byteBuffer);
+//            try {
+//                Thread.sleep(100);
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
+        }
         while (byteBuffer.hasRemaining()) {
+            LOGGER.error("{}",byteBuffer);
             try {
                 socketChannel.write(byteBuffer);
             } catch (IOException e) {
                 LOGGER.error("Socket channel send error! {}：{} {} {}",socketChannel.socket().getInetAddress().getHostAddress(),socketChannel.socket().getPort(),message,e);
                 return false;
             }
+            LOGGER.error("{}",byteBuffer);
         }
+        LOGGER.info("Message sent! {}",message);
         return true;
     }
 
@@ -72,6 +84,7 @@ public class Message {
                 return true;
             }
         }
+        LOGGER.error("Incomplete message received! {}",byteBuffer);
         return false;
     }
 
@@ -87,6 +100,7 @@ public class Message {
         msg.protocolType = byteBuffer.getShort();
         msg.msgType = byteBuffer.getShort();
         byteBuffer.get(msg.content,0,msg.contentLen);
+        LOGGER.info("Message received. {}",msg);
         return msg;
     }
 

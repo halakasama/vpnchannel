@@ -3,7 +3,7 @@ package com.halakasama.control.protocal.authentication.callee;
 import com.halakasama.config.GlobalParam;
 import com.halakasama.control.ConnectContext;
 import com.halakasama.control.LocalContextHelper;
-import com.halakasama.control.protocal.Message;
+import com.halakasama.control.Message;
 import com.halakasama.control.protocal.ProtocolType;
 import com.halakasama.control.protocal.authentication.AuthMessageType;
 import org.apache.commons.codec.binary.StringUtils;
@@ -64,7 +64,7 @@ public class AuthRequestWait implements AuthCalleeState{
         authCallee.challengeCode = challengeCode;
 
         //将挑战随机数封装到Message，并发送
-        Message.sendMessage(socketChannel, new Message(ProtocolType.AuthProtocol,AuthMessageType.ChallengeCode,challengeCode,challengeCode.length));
+        Message.sendMessage(socketChannel, new Message(ProtocolType.AuthProtocolCallee,AuthMessageType.ChallengeCode,challengeCode,challengeCode.length));
 
         //更新状态机状态
         authCallee.currentState = ChallengeCodeSent.getInstance();

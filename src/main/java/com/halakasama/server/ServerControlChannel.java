@@ -1,12 +1,13 @@
-package com.halakasama.control.server;
+package com.halakasama.server;
 
-import com.halakasama.config.ServerConfiguration;
 import com.halakasama.control.ControlChannelHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.InetSocketAddress;
+import java.net.UnknownHostException;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
@@ -18,21 +19,42 @@ import java.util.Set;
  */
 public class ServerControlChannel {
     private static final Logger LOGGER = LoggerFactory.getLogger(ServerControlChannel.class);
+    InetAddress serverAddress;
+    int serverTcpPort;
 
-    public void service(ServerConfiguration serverConfig){
+    public static void main(String[] args) {
+        String serverAddress = args[0];
+        int serverTcpPort = Integer.parseInt(args[1]);
+        int serverUdpPort = Integer.parseInt(args[2]);
+        int clientUdpPort = Integer.parseInt(args[3]);
+
+        ServerContext serverContext = new ServerContext();
+        new ServerControlChannel(serverAddress,serverTcpPort).service(serverContext);
+    }
+
+    public ServerControlChannel(String serverAddress, int serverTcpPort) {
+        try {
+            this.serverAddress = InetAddress.getByName(serverAddress);
+        } catch (UnknownHostException e) {
+            LOGGER.error("Construct failed.",e);
+        }
+        this.serverTcpPort = serverTcpPort;
+    }
+
+    public void service(ServerContext serverContext){
         Selector selector;
         ServerSocketChannel serverSocketChannel;
-        ServerContext serverContext = new ServerContext();
 
         //打开ServerSocketChannel
         try {
-            serverSocketChannel = ServerSocketChannel.open();
-            serverSocketChannel.bind(new InetSocketAddress(serverConfig.serverAddress, serverConfig.serverPort))
-                    .configureBlocking(false);
             selector = Selector.open();
-            LOGGER.info("Server control channel {}:{} opened.", serverConfig.serverAddress.getHostAddress(), serverConfig.serverPort);
+            serverSocketChannel = ServerSocketChannel.open();
+            serverSocketChannel.bind(new InetSocketAddress(serverAddress, serverTcpPort))
+                    .configureBlocking(false);
+            LOGGER.error("Blocking mode {}", serverSocketChannel.isBlocking());
+            LOGGER.info("Server control channel {}:{} opened.", serverAddress.getHostAddress(), serverTcpPort);
         }catch (IOException e){
-            LOGGER.error("Server control channel {}:{} open failed. {}",serverConfig.serverAddress.getHostAddress(), serverConfig.serverPort,e);
+            LOGGER.error("Server control channel {}:{} open failed. {}",serverAddress.getHostAddress(), serverTcpPort,e);
             return;
         }
 

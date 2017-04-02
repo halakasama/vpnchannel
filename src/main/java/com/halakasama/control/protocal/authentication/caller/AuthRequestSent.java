@@ -3,8 +3,7 @@ package com.halakasama.control.protocal.authentication.caller;
 import com.halakasama.config.GlobalParam;
 import com.halakasama.control.ConnectContext;
 import com.halakasama.control.CryptoContext;
-import com.halakasama.control.LocalContextHelper;
-import com.halakasama.control.protocal.Message;
+import com.halakasama.control.Message;
 import com.halakasama.control.protocal.ProtocolType;
 import com.halakasama.control.protocal.authentication.AuthMessageType;
 import org.slf4j.Logger;
@@ -49,7 +48,7 @@ public class AuthRequestSent implements AuthCallerState {
         byte[] challengeReply = cryptoContext.calcHmac(challengeCode, GlobalParam.AUTH_SALT_KEY_PTR);
 
         //发送应答码消息
-        Message.sendMessage(socketChannel, new Message(ProtocolType.AuthProtocol,AuthMessageType.ChallengeResponse,challengeReply,challengeReply.length));
+        Message.sendMessage(socketChannel, new Message(ProtocolType.AuthProtocolCaller,AuthMessageType.ChallengeResponse,challengeReply,challengeReply.length));
 
         //更新状态机
         authCaller.currentState = ChallengeResponseSent.getInstance();

@@ -2,7 +2,7 @@ package com.halakasama.control.protocal.authentication.caller;
 
 import com.halakasama.control.ConnectContext;
 import com.halakasama.control.LocalContextHelper;
-import com.halakasama.control.protocal.Message;
+import com.halakasama.control.Message;
 import com.halakasama.control.protocal.ProtocolType;
 import com.halakasama.control.protocal.authentication.AuthMessageType;
 import org.apache.commons.codec.binary.StringUtils;
@@ -38,7 +38,7 @@ public class NewAuthStart implements AuthCallerState{
 
         //发送挑战应答认证请求
         byte[] uidInByte = StringUtils.getBytesUtf8(localContextHelper.getLocalUid());
-        Message.sendMessage(socketChannel,new Message(ProtocolType.AuthProtocol, AuthMessageType.AuthRequest,uidInByte,uidInByte.length));
+        Message.sendMessage(socketChannel,new Message(ProtocolType.AuthProtocolCaller, AuthMessageType.AuthRequest,uidInByte,uidInByte.length));
 
         //更新状态机
         authCaller.currentState = AuthRequestSent.getInstance();

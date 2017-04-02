@@ -15,7 +15,7 @@ public interface LocalContextHelper {
     byte[] getCurrentKey(String uid, int keyPtr, int size);
 
     //SocketChannel连接维护
-    void registerConnection(ConnectContext connectContext);
+    void registerConnection(ConnectContext connectContext, String virtualAddress);
     void unregisterConnection(ConnectContext connectContext);
 
 

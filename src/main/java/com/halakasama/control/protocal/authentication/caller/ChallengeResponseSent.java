@@ -1,11 +1,12 @@
 package com.halakasama.control.protocal.authentication.caller;
 
-import com.halakasama.control.ConnectContext;
-import com.halakasama.control.LocalContextHelper;
-import com.halakasama.control.protocal.Message;
+import com.halakasama.control.Message;
 import com.halakasama.control.protocal.authentication.AuthMessageType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.nio.channels.SocketChannel;
 
 /**
  * Created by admin on 2017/3/29.
@@ -28,8 +29,7 @@ public class ChallengeResponseSent implements AuthCallerState {
      */
     @Override
     public void proceed(Message message, AuthCaller authCaller) {
-        ConnectContext connectContext = authCaller.getConnectContext();
-        LocalContextHelper localContextHelper = authCaller.getLocalContextHelper();
+        SocketChannel socketChannel = authCaller.getConnectContext().getSocketChannel();
 
         //验证消息类型是否合法
         if (!AuthMessageType.isAuthResult(message.msgType)){
@@ -37,15 +37,20 @@ public class ChallengeResponseSent implements AuthCallerState {
             return;
         }
 
-        //检查认证是否成功，并更新状态机；如果认证成功，则注册该连接
+        //检查认证是否成功，并更新状态机
         boolean authSuccess = (message.contentLen > 0 && message.content[0] == 0);
         if (authSuccess){
-            localContextHelper.registerConnection(connectContext);
             authCaller.currentState = AuthCallerSuccess.getInstance();
             LOGGER.info("Authentication success!");
+            authCaller.getSuccessor().trigger();
         }else {
             authCaller.currentState = AuthCallerFail.getInstance();
             LOGGER.info("Authentication failed!");
+            try {
+                socketChannel.close();
+            } catch (IOException e) {
+                LOGGER.error("SocketChannel close failed.",e);
+            }
         }
     }
 }

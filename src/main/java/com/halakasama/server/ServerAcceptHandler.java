@@ -1,6 +1,5 @@
-package com.halakasama.control.server;
+package com.halakasama.server;
 
-import com.halakasama.control.ConnectContext;
 import com.halakasama.control.ControlChannelHandler;
 import com.halakasama.control.ControlChannelMessageHandler;
 import org.slf4j.Logger;
@@ -11,7 +10,6 @@ import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
-import java.util.Map;
 
 /**
  * Created by admin on 2017/3/27.
@@ -31,8 +29,10 @@ public class ServerAcceptHandler implements ControlChannelHandler {
         SocketChannel socketChannel;
         try {
             socketChannel = serverSocketChannel.accept();
+            socketChannel.socket().setReuseAddress(true);
             socketChannel.configureBlocking(false);
             socketChannel.register(selector, SelectionKey.OP_READ, new ControlChannelMessageHandler(socketChannel,true, serverContext));
+
         }catch (IOException e){
             LOGGER.error("Client connection accept failed.",e);
             return;

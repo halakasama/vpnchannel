@@ -4,7 +4,7 @@ import com.halakasama.config.GlobalParam;
 import com.halakasama.control.ConnectContext;
 import com.halakasama.control.CryptoContext;
 import com.halakasama.control.LocalContextHelper;
-import com.halakasama.control.protocal.Message;
+import com.halakasama.control.Message;
 import com.halakasama.control.protocal.ProtocolType;
 import com.halakasama.control.protocal.authentication.AuthMessageType;
 import org.bouncycastle.pqc.math.linearalgebra.ByteUtils;
@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.nio.channels.SocketChannel;
+import java.util.Arrays;
 
 /**
  * Created by admin on 2017/3/29.
@@ -49,18 +50,21 @@ public class ChallengeCodeSent implements AuthCalleeState{
 
         //检查应答消息是否有效
         String uid = connectContext.getRemoteUid();
-        byte[] challengeReply = message.content;
+        byte[] challengeReply = Arrays.copyOf(message.content,message.contentLen);
         byte[] stdReply = cryptoContext.calcHmac(authCallee.challengeCode, GlobalParam.AUTH_SALT_KEY_PTR);
         boolean authResult = ByteUtils.equals(challengeReply,stdReply);
 
         //发送认证结果
-        Message.sendMessage(socketChannel, new Message(ProtocolType.AuthProtocol,AuthMessageType.AuthResult,new byte[]{(byte)(authResult ? 0 : 1)},1));
+        Message.sendMessage(socketChannel, new Message(ProtocolType.AuthProtocolCallee,AuthMessageType.AuthResult,new byte[]{(byte)(authResult ? 0 : 1)},1));
 
-        //根据认证结果更新状态机，如果认证成功，则注册ConnectionContext;否则，关闭SocketChannel
+        //根据认证结果更新状态机
         if (authResult){
-            localContextHelper.registerConnection(connectContext);
+//            localContextHelper.registerConnection(connectContext, );
             authCallee.currentState = AuthCalleeSuccess.getInstance();
             LOGGER.info("Authentication success! uid = {}, {}:{}",uid,socketChannel.socket().getInetAddress().getHostAddress(),socketChannel.socket().getPort());
+
+            //触法下一级状态机
+            authCallee.getSuccessor().trigger();
         }else {
             authCallee.currentState = AuthCalleeFail.getInstance();
             LOGGER.info("Authentication failed! uid = {}, {}:{}",uid,socketChannel.socket().getInetAddress().getHostAddress(),socketChannel.socket().getPort());

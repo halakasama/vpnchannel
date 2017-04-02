@@ -1,4 +1,4 @@
-package com.halakasama.control.server;
+package com.halakasama.server;
 
 
 import com.halakasama.control.crypto.RandGen;

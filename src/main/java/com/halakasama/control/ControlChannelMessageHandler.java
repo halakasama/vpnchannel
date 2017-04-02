@@ -1,8 +1,5 @@
 package com.halakasama.control;
 
-import com.halakasama.control.protocal.Message;
-import com.halakasama.control.protocal.ProtocolHandler;
-import com.halakasama.control.server.ServerContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,12 +17,17 @@ public class ControlChannelMessageHandler implements ControlChannelHandler{
     private ByteBuffer buffer;
 
     private ConnectContext connectContext;
+    private LocalContextHelper localContextHelper;
 
     public ControlChannelMessageHandler(SocketChannel socketChannel, boolean serverMode, LocalContextHelper localContextHelper) {
         buffer = ByteBuffer.allocate(BUF_SIZE);
         buffer.clear();
 
+        this.localContextHelper = localContextHelper;
         this.connectContext = new ConnectContext.Builder(serverMode, socketChannel, localContextHelper).build();
+
+        //触发协议状态机
+        connectContext.getProtocolHandlerChain().trigger();
     }
 
 
@@ -39,7 +41,8 @@ public class ControlChannelMessageHandler implements ControlChannelHandler{
         try {
             socketChannel.read(buffer);
         } catch (IOException e) {
-            LOGGER.error("SocketChannel {}:{} read error! {}",socketChannel.socket().getInetAddress().getHostAddress(),socketChannel.socket().getPort(),e);
+            LOGGER.warn("SocketChannel {}:{} read error! {}",socketChannel.socket().getInetAddress().getHostAddress(),socketChannel.socket().getPort(),e);
+            localContextHelper.unregisterConnection(connectContext);
             return;
         }
 

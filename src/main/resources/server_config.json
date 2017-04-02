@@ -1,14 +1,14 @@
 {
-  "serverAddress":"192.168.48.6",
+  "serverAddress":"192.168.0.102",
   "serverPort":1234,
-  "clientPort":1235,
+  "clientPort":1236,
   "clients": [
     {
-      "physicalAddress": "192.168.48.79",
-      "virtualAddress": "10.9.8.2"
+      "physicalAddress": "192.168.0.102",
+      "virtualAddress": "10.9.8.2",
     },
     {
-      "physicalAddress": "192.168.48.101",
+      "physicalAddress": "192.168.0.102",
       "virtualAddress": "10.9.8.3"
     },
     {

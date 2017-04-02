@@ -8,7 +8,7 @@ public class AuthMessageType {
     public static final short ChallengeCode = 1;//对方发送挑战随机码，进行挑战
     public static final short ChallengeResponse = 2;//本机发送应答消息
     public static final short AuthResult = 3;//对方发送认证结果
-    public static final short AuthMessageTypeNum = 4;
+    public static final short AuthMessageTypeNum = 5;
 
     public static boolean isValidAuthMessage(short messageType){
         return messageType < AuthMessageTypeNum && messageType >= 0;
