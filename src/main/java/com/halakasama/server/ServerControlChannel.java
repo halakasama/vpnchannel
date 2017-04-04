@@ -29,6 +29,12 @@ public class ServerControlChannel {
         int clientUdpPort = Integer.parseInt(args[3]);
 
         ServerContext serverContext = new ServerContext();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                new ServerDataChannel(serverAddress,serverUdpPort,clientUdpPort).serve(serverContext);
+            }
+        }).start();
         new ServerControlChannel(serverAddress,serverTcpPort).service(serverContext);
     }
 

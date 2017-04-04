@@ -1,6 +1,7 @@
 package com.halakasama.control;
 
 import com.halakasama.config.GlobalParam;
+import com.halakasama.control.crypto.CryptoContext;
 import com.halakasama.control.protocal.ProtocolHandler;
 import com.halakasama.control.protocal.authentication.callee.AuthCallee;
 import com.halakasama.control.protocal.authentication.caller.AuthCaller;

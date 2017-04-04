@@ -1,5 +1,4 @@
 import com.google.common.io.Resources;
-import com.halakasama.vpn.ServerDataChannel;
 import com.halakasama.vpn.VPNClient;
 
 /**
@@ -18,8 +17,8 @@ public class Main {
 //        String configPath = Main.class.getResource("server_config.json").getPath();
         System.out.println(configPath);
         if (mode.equals("server")){
-            ServerDataChannel serverDataChannel = new ServerDataChannel(configPath);
-            serverDataChannel.run();
+//            ServerDataChannel serverDataChannel = new ServerDataChannel(configPath);
+//            serverDataChannel.serve();
         }else {
             int clientIndex = Integer.parseInt(args[1]);
             VPNClient vpnClient = new VPNClient(configPath,clientIndex);

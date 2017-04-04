@@ -1,8 +1,7 @@
 package com.halakasama.control.protocal.authentication.callee;
 
-import com.halakasama.config.GlobalParam;
 import com.halakasama.control.ConnectContext;
-import com.halakasama.control.CryptoContext;
+import com.halakasama.control.crypto.CryptoContext;
 import com.halakasama.control.LocalContextHelper;
 import com.halakasama.control.Message;
 import com.halakasama.control.protocal.ProtocolType;
@@ -51,7 +50,7 @@ public class ChallengeCodeSent implements AuthCalleeState{
         //检查应答消息是否有效
         String uid = connectContext.getRemoteUid();
         byte[] challengeReply = Arrays.copyOf(message.content,message.contentLen);
-        byte[] stdReply = cryptoContext.calcHmac(authCallee.challengeCode, GlobalParam.AUTH_SALT_KEY_PTR);
+        byte[] stdReply = cryptoContext.getHmac(authCallee.challengeCode).cipherText;
         boolean authResult = ByteUtils.equals(challengeReply,stdReply);
 
         //发送认证结果

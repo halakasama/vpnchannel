@@ -6,4 +6,5 @@ package com.halakasama.control.crypto;
 public interface CodecFunc {
     byte[] encode(byte[] msg, byte[] key);
     byte[] decode(byte[] msg, byte[] key);
+    int keySizeInByte();
 }

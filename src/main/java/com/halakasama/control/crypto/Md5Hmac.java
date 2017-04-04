@@ -34,6 +34,11 @@ public class Md5Hmac implements HashFunc {
         return 16;
     }
 
+    @Override
+    public int getHmacLength() {
+        return 16;
+    }
+
     public static void main(String[] args) {
         byte[] key = new byte[16];
         byte[] message = StringUtils.getBytesUtf8("abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz");

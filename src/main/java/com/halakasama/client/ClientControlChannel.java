@@ -35,7 +35,7 @@ public class ClientControlChannel {
         int clientId = Integer.parseInt(args[6]);
 
 
-        ClientContext clientContext = new ClientContext("client" + clientId);
+        ClientContext clientContext = new ClientContext("client" + clientId,serverAddress,clientAddress,serverUdpPort,clientUdpPort);
         new ClientControlChannel(serverAddress,serverTcpPort,clientAddress,clientTcpPort).service(clientContext);
     }
 

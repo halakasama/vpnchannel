@@ -17,17 +17,33 @@ public class Test {
         public String name;
         public double version;
         public byte[] data;
+
+        void process(){
+            int i = 0;
+             ++i;
+            System.out.println(i);
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        public static void start(){
+            MyMessage myMessage = new MyMessage();
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    while (true) {
+                        myMessage.process();
+                    }
+                }
+            }).start();
+        }
     }
 
     public static void main(String[] args) throws Exception {
-        LinkedHashMap<String,String> a = new LinkedHashMap<>();
-        a.put("abc",null);
-        DatagramSocket datagramSocket = new DatagramSocket(1110, InetAddress.getByName("10.9.8.3"));
-        byte[] buf = new byte[2048];
-        DatagramPacket packet = new DatagramPacket(buf,0,buf.length);
-        while (true){
-            datagramSocket.receive(packet);
-            System.out.println(IpV4Packet.newPacket(packet.getData(),0,packet.getLength()));
-        }
+        MyMessage.start();
+        System.out.println("a");
+
     }
 }

@@ -1,8 +1,7 @@
 package com.halakasama.control.protocal.authentication.caller;
 
-import com.halakasama.config.GlobalParam;
 import com.halakasama.control.ConnectContext;
-import com.halakasama.control.CryptoContext;
+import com.halakasama.control.crypto.CryptoContext;
 import com.halakasama.control.Message;
 import com.halakasama.control.protocal.ProtocolType;
 import com.halakasama.control.protocal.authentication.AuthMessageType;
@@ -45,7 +44,7 @@ public class AuthRequestSent implements AuthCallerState {
 
         //计算挑战码hmac，作为应答消息
         byte[] challengeCode = Arrays.copyOf(message.content,message.contentLen);
-        byte[] challengeReply = cryptoContext.calcHmac(challengeCode, GlobalParam.AUTH_SALT_KEY_PTR);
+        byte[] challengeReply = cryptoContext.getHmac(challengeCode).cipherText;
 
         //发送应答码消息
         Message.sendMessage(socketChannel, new Message(ProtocolType.AuthProtocolCaller,AuthMessageType.ChallengeResponse,challengeReply,challengeReply.length));

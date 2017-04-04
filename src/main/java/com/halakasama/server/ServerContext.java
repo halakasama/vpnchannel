@@ -2,7 +2,9 @@ package com.halakasama.server;
 
 import com.halakasama.config.GlobalParam;
 import com.halakasama.control.ConnectContext;
+import com.halakasama.control.crypto.CryptoContext;
 import com.halakasama.control.LocalContextHelper;
+import com.halakasama.keymanage.KeyPair;
 import org.apache.commons.codec.binary.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,7 +39,20 @@ public class ServerContext implements LocalContextHelper{
         return addressContextMap.containsKey(virtualAddress);
     }
     public InetAddress getPhysicalAddress(String virtualAddress){
-        return addressContextMap.get(virtualAddress).getRemotePhysicalAddress();
+        ConnectContext connectContext = addressContextMap.get(virtualAddress);
+        if (connectContext == null){
+            LOGGER.error("Virtual address {} not registered yet.",virtualAddress);
+            return null;
+        }
+        return connectContext.getRemotePhysicalAddress();
+    }
+    public CryptoContext getCryptoContext(String virtualAddress){
+        ConnectContext connectContext = addressContextMap.get(virtualAddress);
+        if (connectContext == null){
+            LOGGER.error("Virtual address {} not registered yet.",virtualAddress);
+            return null;
+        }
+        return connectContext.getCryptoContext();
     }
 
     @Override
@@ -56,8 +71,18 @@ public class ServerContext implements LocalContextHelper{
     }
 
     @Override
-    public byte[] getCurrentKey(String uid, int keyPtr, int size) {
+    public byte[] getSpecifiedKey(String uid, int keyPtr, int size, int zone) {
         return new byte[size];
+    }
+
+    @Override
+    public KeyPair getCurrentKey(String uid, int size, int zone) {
+        return new KeyPair(0,new byte[size]);
+    }
+
+    @Override
+    public int getCurrentKeyPtr(String uid, int zone) {
+        return 0;
     }
 
     @Override

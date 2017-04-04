@@ -26,6 +26,7 @@ public class AESCodec implements CodecFunc {
     private AESCodec(){
     }
 
+
     /**
      *
      * @param msg
@@ -56,6 +57,11 @@ public class AESCodec implements CodecFunc {
             LOGGER.error("Encode error occurred.Message not encoded.",e);
         }
         return cipherText;
+    }
+
+    @Override
+    public int keySizeInByte() {
+        return 16;
     }
 
     public static void main(String[] args) {

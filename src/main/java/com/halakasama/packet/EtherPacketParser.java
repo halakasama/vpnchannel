@@ -2,6 +2,9 @@ package com.halakasama.packet;
 
 import ch.qos.logback.core.encoder.ByteArrayUtil;
 import com.google.common.base.Strings;
+import com.halakasama.control.crypto.CryptoContext;
+import com.halakasama.data.DataWrapper;
+import com.halakasama.keymanage.CipherPair;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.pcap4j.packet.*;
@@ -62,14 +65,6 @@ public class EtherPacketParser {
         ethernetPacket = null;
         buffer = null;
         length = 0;
-    }
-
-
-    public byte[] checkSubnetAndGetArpResponse(String ip4Address, String mask, String macAddress){
-        if (isInIp4Subnet(ip4Address,mask)){
-            return getArpResponse(macAddress);
-        }
-        return null;
     }
 
     public byte[] getArpResponse(String macAddress){
@@ -142,6 +137,25 @@ public class EtherPacketParser {
             LOGGER.error("Function isInIp4Subnet invalid input : ip4Address {},\tmask {}.",ip4Address,mask );
             return false;
         }
+    }
+
+    public byte[] getProcessedMessage(CryptoContext cryptoContext){
+        byte[] plainText = Arrays.copyOf(buffer,length);
+
+        //加密消息
+        CipherPair cipherPair = cryptoContext.encode(plainText);
+
+        //计算hmac 并获得序列化消息
+        byte[] message = new DataWrapper.Builder(cryptoContext)
+                .srcAddress(ipV4Header.getSrcAddr().getHostAddress())
+                .dstAddress(ipV4Header.getDstAddr().getHostAddress())
+                .keyPtr(cipherPair.keyPtr)
+                .data(cipherPair.cipherText,(short) cipherPair.size)
+                .prepareHmac()
+                .getMessage();
+
+        LOGGER.info("数据通道发送数据包。 {}",DataWrapper.decode(message,message.length));
+        return message;
     }
 
     public DataPacket getDataPacket(){

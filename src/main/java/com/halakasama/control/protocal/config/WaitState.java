@@ -34,8 +34,8 @@ public class WaitState implements ConfigWaitState {
 
         //注册本机虚拟地址,并启动数据通道处理线程
         String virtualAddress = StringUtils.newStringUtf8(message.content);
-        localContextHelper.registerConnection(connectContext, virtualAddress);
         LOGGER.info("Local virtual address is {}.", virtualAddress);
+        localContextHelper.registerConnection(connectContext, virtualAddress);
         //todo 启动数据通道处理线程
     }
 }

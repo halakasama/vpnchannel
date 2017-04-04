@@ -35,7 +35,7 @@ public class Message {
     }
 
     public Message() {
-        content = new byte[FRAME_MAX_SIZE];
+//        content = new byte[FRAME_MAX_SIZE];
     }
 
     public Message(short protocolType, short msgType, byte[] content, int contentLen) {
@@ -99,7 +99,8 @@ public class Message {
         msg.contentLen = (short) (msg.msgLen - HEADER_LEN);
         msg.protocolType = byteBuffer.getShort();
         msg.msgType = byteBuffer.getShort();
-        byteBuffer.get(msg.content,0,msg.contentLen);
+        msg.content = new byte[msg.contentLen];
+        byteBuffer.get(msg.content);
         LOGGER.info("Message received. {}",msg);
         return msg;
     }
