@@ -63,7 +63,7 @@ public class ClientControlChannel {
             socketChannel.connect(new InetSocketAddress(serverAddress, serverPort));
             socketChannel.configureBlocking(false);
 
-            LOGGER.error("Blocking mode {} {}", socketChannel.isBlocking(),socketChannel.isConnected());
+            LOGGER.debug("Blocking mode {} {}", socketChannel.isBlocking(),socketChannel.isConnected());
 
             LOGGER.info("Client control channel server address{}:{} opened.", serverAddress.getHostAddress(), serverPort);
         } catch (IOException e) {

@@ -57,7 +57,7 @@ public class ServerControlChannel {
             serverSocketChannel = ServerSocketChannel.open();
             serverSocketChannel.bind(new InetSocketAddress(serverAddress, serverTcpPort))
                     .configureBlocking(false);
-            LOGGER.error("Blocking mode {}", serverSocketChannel.isBlocking());
+            LOGGER.debug("Blocking mode {}", serverSocketChannel.isBlocking());
             LOGGER.info("Server control channel {}:{} opened.", serverAddress.getHostAddress(), serverTcpPort);
         }catch (IOException e){
             LOGGER.error("Server control channel {}:{} open failed. {}",serverAddress.getHostAddress(), serverTcpPort,e);
