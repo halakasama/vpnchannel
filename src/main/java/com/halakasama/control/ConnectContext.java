@@ -36,15 +36,19 @@ public class ConnectContext {
             //初始化protocolHandlerChain及remoteUid
             if (serverMode){
                 connectContext.protocolHandlerChain = new AuthCallee(connectContext, localContextHelper);
-                connectContext.protocolHandlerChain.chainAddSuccessor(new AuthCaller(connectContext,localContextHelper))
+                connectContext.protocolHandlerChain
+                        .chainAddSuccessor(new AuthCaller(connectContext,localContextHelper))
                         .chainAddSuccessor(new ConfigPush(connectContext,localContextHelper))
-                        .chainAddSuccessor(new DefaultHandler(connectContext,localContextHelper));
+                        .chainAddSuccessor(new DefaultHandler(connectContext,localContextHelper))
+                ;
                 connectContext.setRemoteUid(null);
             }else {
                 connectContext.protocolHandlerChain = new AuthCaller(connectContext, localContextHelper);
-                connectContext.protocolHandlerChain.chainAddSuccessor(new AuthCallee(connectContext,localContextHelper))
+                connectContext.protocolHandlerChain
+                        .chainAddSuccessor(new AuthCallee(connectContext,localContextHelper))
                         .chainAddSuccessor(new ConfigWait(connectContext,localContextHelper))
-                        .chainAddSuccessor(new DefaultHandler(connectContext,localContextHelper));
+                        .chainAddSuccessor(new DefaultHandler(connectContext,localContextHelper))
+                ;
                 connectContext.setRemoteUid(GlobalParam.SERVER_UID);
             }
         }

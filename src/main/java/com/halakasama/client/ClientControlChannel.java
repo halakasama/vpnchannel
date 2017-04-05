@@ -59,9 +59,9 @@ public class ClientControlChannel {
             selector = Selector.open();
             socketChannel = SocketChannel.open();
             socketChannel.socket().setReuseAddress(true);
-            socketChannel.bind(new InetSocketAddress(clientAddress,clientPort)).configureBlocking(false);
+            socketChannel.bind(new InetSocketAddress(clientAddress,clientPort));
             socketChannel.connect(new InetSocketAddress(serverAddress, serverPort));
-            socketChannel.finishConnect();
+            socketChannel.configureBlocking(false);
 
             LOGGER.error("Blocking mode {} {}", socketChannel.isBlocking(),socketChannel.isConnected());
 

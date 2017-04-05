@@ -49,8 +49,8 @@ public class Message {
     public static boolean sendMessage(SocketChannel socketChannel, Message message){
         ByteBuffer byteBuffer = Message.encode(message);//一个读模式的ByteBuffer
         if (message.content[0] == 48 ){
-            System.out.println();
-            LOGGER.error("{}",byteBuffer);
+//            System.out.println();
+            LOGGER.debug("{}",byteBuffer);
 //            try {
 //                Thread.sleep(100);
 //            } catch (InterruptedException e) {
@@ -58,14 +58,14 @@ public class Message {
 //            }
         }
         while (byteBuffer.hasRemaining()) {
-            LOGGER.error("{}",byteBuffer);
+            LOGGER.debug("{}",byteBuffer);
             try {
                 socketChannel.write(byteBuffer);
             } catch (IOException e) {
                 LOGGER.error("Socket channel send error! {}：{} {} {}",socketChannel.socket().getInetAddress().getHostAddress(),socketChannel.socket().getPort(),message,e);
                 return false;
             }
-            LOGGER.error("{}",byteBuffer);
+            LOGGER.debug("{}",byteBuffer);
         }
         LOGGER.info("Message sent! {}",message);
         return true;
