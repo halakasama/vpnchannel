@@ -18,8 +18,8 @@
     <root>
         <level value="trace" />
         <!--<level value="error" />-->
-        <!--<appender-ref ref="console" />-->
-        <appender-ref ref="fileAppender" />
+        <appender-ref ref="console" />
+        <!--<appender-ref ref="fileAppender" />-->
     </root>
 
 </configuration>

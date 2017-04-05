@@ -39,7 +39,12 @@ public class ControlChannelMessageHandler implements ControlChannelHandler{
     public void handleTcpEvent(SelectionKey selectionKey) {
         SocketChannel socketChannel = (SocketChannel)selectionKey.channel();
         try {
-            socketChannel.read(buffer);
+            int cnt = socketChannel.read(buffer);
+            if (cnt == -1){
+                LOGGER.warn("SocketChannel {}:{} reached the end of input stream!",socketChannel.socket().getInetAddress().getHostAddress(),socketChannel.socket().getPort());
+                localContextHelper.unregisterConnection(connectContext);
+                return;
+            }
         } catch (IOException e) {
             LOGGER.warn("SocketChannel {}:{} read error! {}",socketChannel.socket().getInetAddress().getHostAddress(),socketChannel.socket().getPort(),e);
             localContextHelper.unregisterConnection(connectContext);
