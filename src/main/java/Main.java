@@ -1,11 +1,17 @@
 import com.google.common.io.Resources;
 import com.halakasama.vpn.VPNClient;
 
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
 /**
  * Created by pengfei.ren on 2017/3/12.
  */
 public class Main {
     public static void main(String[] args) throws Exception {
+        Map<String,String> map = new ConcurrentHashMap<>();
+        String a = map.get("abc");
+
 //        MessagePack msgPack = new MessagePack();
 //        msgPack.register(DataPacket.class);
 //        byte[] buf = msgPack.write(new DataPacket("192.1","192.2",new byte[]{1,2,3}));

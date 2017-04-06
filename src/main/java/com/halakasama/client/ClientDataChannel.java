@@ -56,9 +56,9 @@ public class ClientDataChannel {
 
         //解析以太网帧，并判断ip包是否是可处理的类型（会有操作系统发来的一系列配置报文）
         etherPacketParser.parseEtherPacket(inBuf, inLen);
-        if (!etherPacketParser.isInIp4Subnet(GlobalParam.SUBNET, GlobalParam.SUBNET_MASK)){
-            return;
-        }
+//        if (!etherPacketParser.isInIp4Subnet(GlobalParam.SUBNET, GlobalParam.SUBNET_MASK)){
+//            return;
+//        }
 
         //判断是否是ip广播
         if (etherPacketParser.isIpBroadcast(GlobalParam.SUBNET_BROADCAST)){

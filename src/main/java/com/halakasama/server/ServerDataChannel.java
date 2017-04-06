@@ -60,8 +60,14 @@ public class ServerDataChannel {
         //解密数据包
         byte[] plainText = cryptoContext.decode(dataWrapper.getData(),dataWrapper.getKeyPtr());
 
+        //进行目的物理地址到虚拟地址的转换
+        String virtualDestinationAddress = serverContext.convertPhysicalAddressToVirtualAddress(dataWrapper.getDstAddress());
+        if (virtualDestinationAddress == null){
+            virtualDestinationAddress = dataWrapper.getDstAddress();
+        }
+
         //加密数据
-        cryptoContext = serverContext.getCryptoContext(dataWrapper.getDstAddress());
+        cryptoContext = serverContext.getCryptoContext(virtualDestinationAddress);
         if (cryptoContext == null){
             return;
         }
@@ -77,7 +83,7 @@ public class ServerDataChannel {
                 .getMessage();
 
         //发送数据包
-        datagramPacket.setAddress(serverContext.getPhysicalAddress(dataWrapper.getDstAddress()));
+        datagramPacket.setAddress(serverContext.getPhysicalAddress(virtualDestinationAddress));
         datagramPacket.setPort(clientUdpPort);
         datagramPacket.setData(message,0,message.length);
         try {

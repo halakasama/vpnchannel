@@ -22,11 +22,13 @@ public class ServerContext implements LocalContextHelper{
     private String serverUid;
     private QRNG qrng;
     private Map<String,ConnectContext> addressContextMap;
+    private Map<String,String> physicalVirtualAddressMap;
 
     public ServerContext(){
         serverUid = GlobalParam.SERVER_UID;
         qrng = QRNG.getInstance();
         addressContextMap = new ConcurrentHashMap<>();
+        physicalVirtualAddressMap = new ConcurrentHashMap<>();
     }
 
     public static void main(String[] args) {
@@ -34,6 +36,11 @@ public class ServerContext implements LocalContextHelper{
         String string = StringUtils.newStringUtf8(bytes);
         System.out.println(string);
     }
+
+    public String convertPhysicalAddressToVirtualAddress(String physicalAddress){
+        return physicalVirtualAddressMap.get(physicalAddress);
+    }
+
 
     public boolean isVirtualAddressValid(String virtualAddress){
         return addressContextMap.containsKey(virtualAddress);
@@ -89,11 +96,16 @@ public class ServerContext implements LocalContextHelper{
     public void registerConnection(ConnectContext connectContext, String virtualAddress) {
         addressContextMap.put(virtualAddress,connectContext);
         connectContext.setVirtualAddress(virtualAddress);
+        physicalVirtualAddressMap.put(connectContext.getRemotePhysicalAddress().getHostAddress(),virtualAddress);
         LOGGER.info("User {} log in. Virtual address is {}. Physical address is {}.", connectContext.getRemoteUid(), virtualAddress, connectContext.getRemotePhysicalAddress());
     }
 
     @Override
     public void unregisterConnection(ConnectContext connectContext) {
+        String physicalAddress = connectContext.getRemotePhysicalAddress().getHostAddress();
+        if (physicalAddress != null && physicalVirtualAddressMap.containsKey(physicalAddress)){
+            physicalVirtualAddressMap.remove(physicalAddress);
+        }
         String virtualAddress = connectContext.getVirtualAddress();
         if (virtualAddress != null && addressContextMap.containsKey(virtualAddress)) {
             addressContextMap.remove(virtualAddress);
