@@ -1,5 +1,6 @@
 package com.halakasama.client;
 
+import com.halakasama.UKeyInfo;
 import com.halakasama.config.GlobalParam;
 import com.halakasama.control.ConnectContext;
 import com.halakasama.control.LocalContextHelper;
@@ -49,6 +50,7 @@ public class ClientContext implements LocalContextHelper{
     @Override
     public String getLocalUid() {
         return clientUid;
+//        int ukeyId =
     }
 
     @Override

@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.InetAddress;
+import java.util.Arrays;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -55,6 +56,12 @@ public class ServerContext implements LocalContextHelper{
         return connectContext.getCryptoContext();
     }
 
+    public byte[] fakeRandom(int size){
+        byte[] key = new byte[size];
+        Arrays.fill(key, (byte) 1);
+        return key;
+    }
+
     @Override
     public String getLocalUid() {
         return serverUid;
@@ -72,12 +79,12 @@ public class ServerContext implements LocalContextHelper{
 
     @Override
     public byte[] getSpecifiedKey(String uid, int keyPtr, int size, int zone) {
-        return new byte[size];
+        return fakeRandom(size);
     }
 
     @Override
     public KeyPair getCurrentKey(String uid, int size, int zone) {
-        return new KeyPair(0,new byte[size]);
+        return new KeyPair(0,fakeRandom(size));
     }
 
     @Override
