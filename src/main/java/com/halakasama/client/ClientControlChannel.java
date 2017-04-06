@@ -58,6 +58,7 @@ public class ClientControlChannel {
         try {
             selector = Selector.open();
             socketChannel = SocketChannel.open();
+            socketChannel.socket().setTcpNoDelay(true);
             socketChannel.socket().setReuseAddress(true);
             socketChannel.bind(new InetSocketAddress(clientAddress,clientPort));
             socketChannel.connect(new InetSocketAddress(serverAddress, serverPort));

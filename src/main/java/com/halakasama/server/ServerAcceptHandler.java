@@ -29,6 +29,7 @@ public class ServerAcceptHandler implements ControlChannelHandler {
         SocketChannel socketChannel;
         try {
             socketChannel = serverSocketChannel.accept();
+            socketChannel.socket().setTcpNoDelay(true);
             socketChannel.socket().setReuseAddress(true);
             socketChannel.configureBlocking(false);
             socketChannel.register(selector, SelectionKey.OP_READ, new ControlChannelMessageHandler(socketChannel,true, serverContext));
